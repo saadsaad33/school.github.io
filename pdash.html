@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord Directeur</title>
+    <style>
+        /* Base Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9fb;
+            transition: background-color 0.3s ease;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo img {
+            height: 50px;
+        }
+
+        .content {
+            padding: 40px 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .grades-grid, .classes-grid, .exam-selection, .student-list {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .grades-grid, .classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .grade-item, .class-item {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #ddd;
+        }
+
+        .grade-item:hover, .class-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .grade-item h3, .class-item h3 {
+            color: #0072ff;
+        }
+
+        .exam-selection, .student-list {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        .exam-selection h2, .student-list h2 {
+            color: #0072ff;
+            margin-bottom: 20px;
+            animation: slideIn 1s ease;
+        }
+
+        .exam-selection label, .student-list label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .exam-selection input, .exam-selection select, .student-list input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .exam-selection button, .student-list button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .exam-selection button {
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            color: white;
+        }
+
+        .exam-selection button:hover {
+            background: #005bb5;
+        }
+
+        .student-list button {
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            color: white;
+        }
+
+        .student-list button:hover {
+            background: #005bb5;
+        }
+
+        .return-button {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+            text-align: center;
+            color: white;
+        }
+
+        /* Specific Styles for Return Buttons */
+        #return-to-grades {
+            background: #ff4f81; /* Matches Grades Page Color */
+        }
+
+        #return-to-grades:hover {
+            background: #d43f60;
+        }
+
+        #return-to-classes {
+            background: #ffb74d; /* Matches Classes Page Color */
+        }
+
+        #return-to-classes:hover {
+            background: #e6892f;
+        }
+
+        #return-to-exam {
+            background: #4caf50; /* Matches Exam Selection Page Color */
+        }
+
+        #return-to-exam:hover {
+            background: #388e3c;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #0072ff;
+            color: white;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header Section -->
+    <header class="header">
+        <div class="logo">
+            <img src="manarlogo.png" alt="Groupe Scolaire Manar elkhair ">
+        </div>
+        <div class="user-info">
+            <p>Bienvenue, Directeur</p>
+            <a href="#" style="color: white;">Déconnexion</a>
+        </div>
+    </header>
+
+    <!-- Content Section -->
+    <div class="content">
+        <!-- Grades Grid -->
+        <div id="grades-grid" class="grades-grid">
+            <div class="grade-item" onclick="showClasses('Grade 1')">
+                <h3>Grade 1</h3>
+            </div>
+            <div class="grade-item" onclick="showClasses('Grade 2')">
+                <h3>Grade 2</h3>
+            </div>
+            <div class="grade-item" onclick="showClasses('Grade 3')">
+                <h3>Grade 3</h3>
+            </div>
+            <div class="grade-item" onclick="showClasses('Grade 4')">
+                <h3>Grade 4</h3>
+            </div>
+            <div class="grade-item" onclick="showClasses('Grade 5')">
+                <h3>Grade 5</h3>
+            </div>
+            <div class="grade-item" onclick="showClasses('Grade 6')">
+                <h3>Grade 6</h3>
+            </div>
+        </div>
+
+        <!-- Classes Grid -->
+        <div id="classes-grid" class="classes-grid">
+            <!-- Classes will be dynamically added here -->
+        </div>
+        <button id="return-to-grades" class="return-button" onclick="returnToGrades()" style="display: none;">Retour aux Niveaux</button>
+
+        <!-- Exam Selection -->
+        <div id="exam-selection" class="exam-selection">
+            <h2>Sélectionner les Détails de l'Examen</h2>
+            <form id="exam-form">
+                <label for="exam-date">Date de l'Examen:</label>
+                <input type="date" id="exam-date" name="exam-date" required><br><br>
+
+                <label for="exam-subject">Matière:</label>
+                <select id="exam-subject" name="exam-subject" required>
+                    <option value="mathematiques">Mathématiques</option>
+                    <option value="anglais">Anglais</option>
+                    <option value="francais">Français</option>
+                    <option value="arabe">Arabe</option>
+                    <option value="physique-chimie">Physique-Chimie</option>
+                    <option value="svt">Science de la Vie et de la Terre</option>
+                    <option value="histoire-geographie">Histoire-Géographie</option>
+                    <option value="philosophie">Philosophie</option>
+                    <option value="instruction-islamique">Instruction Islamique</option>
+                </select><br><br>
+
+                <label for="exam-number">Numéro de l'Examen:</label>
+                <input type="number" id="exam-number" name="exam-number" required><br><br>
+
+                <button type="button" onclick="showStudents()">Continuer</button>
+                <button type="button" id="return-to-classes" class="return-button" onclick="returnToClasses()">Retour</button>
+            </form>
+        </div>
+
+        <!-- Student List -->
+        <div id="student-list" class="student-list">
+            <h2>Liste des Étudiants - Classe: <span id="class-name">Grade 1 - Classe A</span></h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom de l'Étudiant</th>
+                        <th>Note d'Examen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Placeholder for student rows -->
+                    <tr>
+                        <td>Étudiant 1</td>
+                        <td><input type="number" placeholder="Entrez la note" min="0" max="20"></td>
+                    </tr>
+                    <tr>
+                        <td>Étudiant 2</td>
+                        <td><input type="number" placeholder="Entrez la note" min="0" max="20"></td>
+                    </tr>
+                    <!-- More student rows here -->
+                </tbody>
+            </table>
+            <div class="button-container">
+                <input type="file" id="upload" accept=".xls, .xlsx">
+                <button type="button" onclick="uploadMarks()">Télécharger Notes via Excel</button>
+                <button type="button" onclick="saveMarks()">Sauvegarder Notes</button>
+                <button type="button" id="return-to-exam" class="return-button" onclick="returnToExamSelection()">Retour</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to show classes and hide grades grid
+        function showClasses(grade) {
+            const classes = ['Classe A', 'Classe B', 'Classe C']; // Example classes, should be dynamic
+            const classesGrid = document.getElementById('classes-grid');
+            classesGrid.innerHTML = ''; // Clear previous content
+
+            classes.forEach(className => {
+                const classItem = document.createElement('div');
+                classItem.className = 'class-item';
+                classItem.innerHTML = `<h3>${className}</h3>`;
+                classItem.onclick = () => showExamSelection(className);
+                classesGrid.appendChild(classItem);
+            });
+
+            document.getElementById('grades-grid').style.display = 'none';
+            document.getElementById('classes-grid').style.display = 'grid';
+            document.getElementById('return-to-grades').style.display = 'inline-block';
+        }
+
+        // Function to show exam selection and hide classes grid
+        function showExamSelection(className) {
+            document.getElementById('exam-selection').style.display = 'block';
+            document.getElementById('classes-grid').style.display = 'none';
+            document.getElementById('return-to-grades').style.display = 'inline-block';
+            document.getElementById('class-name').innerText = className;
+        }
+
+        // Function to show student list and hide exam selection
+        function showStudents() {
+            document.getElementById('exam-selection').style.display = 'none';
+            document.getElementById('student-list').style.display = 'block';
+        }
+
+        // Function to return to grades grid
+        function returnToGrades() {
+            document.getElementById('classes-grid').style.display = 'none';
+            document.getElementById('exam-selection').style.display = 'none';
+            document.getElementById('student-list').style.display = 'none';
+            document.getElementById('grades-grid').style.display = 'grid';
+            document.getElementById('return-to-grades').style.display = 'none';
+        }
+
+        // Function to return to classes grid
+        function returnToClasses() {
+            document.getElementById('exam-selection').style.display = 'none';
+            document.getElementById('student-list').style.display = 'none';
+            document.getElementById('classes-grid').style.display = 'grid';
+        }
+
+        // Function to return to exam selection
+        function returnToExamSelection() {
+            document.getElementById('student-list').style.display = 'none';
+            document.getElementById('exam-selection').style.display = 'block';
+        }
+
+        // Placeholder function for uploading marks
+        function uploadMarks() {
+            alert('Upload de notes via Excel');
+        }
+
+        // Placeholder function for saving marks
+        function saveMarks() {
+            alert('Notes sauvegardées');
+        }
+
+        // Initial display
+        document.getElementById('grades-grid').style.display = 'grid';
+    </script>
+
+</body>
+
+</html>
